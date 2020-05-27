@@ -1,5 +1,6 @@
 package com.zp.jedis.controller;
 
+import com.zp.jedis.utils.JedisPoolUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
@@ -9,6 +10,9 @@ import java.util.List;
 import java.util.Random;
 
 
+/**
+ * redis实现秒杀
+ */
 @RestController
 public class MiaoshaController {
     private static final String STOCK_KEY = "miaosha:stock";
@@ -39,7 +43,7 @@ public class MiaoshaController {
      */
     @RequestMapping("/miaosha")
     public String miaosha(){
-        Jedis jedis = new Jedis("192.168.223.129", 6379);
+        Jedis jedis = JedisPoolUtil.getInstance().getResource();
         // 监视库存，这里必须放到取库存操作之前
         jedis.watch(STOCK_KEY);
         String stock = jedis.get(STOCK_KEY);
@@ -80,7 +84,7 @@ public class MiaoshaController {
      */
     @RequestMapping("/miaosha2")
     public String miaosha2(){
-        Jedis jedis = new Jedis("192.168.223.129", 6379);
+        Jedis jedis = JedisPoolUtil.getInstance().getResource();
         String sha1 = jedis.scriptLoad(MIAOSHA_LUA_SCRIPT);
         int userId = new Random().nextInt(5000);
         String result = (String) jedis.evalsha(sha1, 1, String.valueOf(userId));
