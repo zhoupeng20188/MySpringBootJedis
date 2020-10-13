@@ -9,9 +9,9 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 public class JedisPoolUtil {
 
-//    private static final String HOST = "192.168.223.129";
-    private static final String HOST = "192.168.1.11";
-    private static final int PORT = 6380;
+    private static final String HOST = "192.168.223.129";
+//    private static final String HOST = "192.168.1.11";
+    private static final int PORT = 6379;
 
     private static JedisPool jedisPool;
 
